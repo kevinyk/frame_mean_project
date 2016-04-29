@@ -110,6 +110,16 @@
             callback();
           })
         }
+        factory.countCompleted = function(userId, callback){
+          $http.post('/countCompleted',userId).success(function(output){
+            callback(output);
+          })
+        }
+        factory.countIncomplete = function(userId, callback){
+          $http.post('/countIncomplete',userId).success(function(output){
+            callback(output);
+          })
+        }
         return factory;
       });
 
@@ -194,11 +204,18 @@
             TaskFactory.index(userId, function(data){
               console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
               $scope.tasks = data;
+              TaskFactory.countCompleted({id:$scope.profile._id}, function(data){
+                $scope.completedCount = data;
+              })
+              TaskFactory.countIncomplete({id:$scope.profile._id}, function(data){
+                $scope.incompleteCount = data;
+              })
             });
 
-         }, function(){
-           console.log('something went wrong');
-         })
+             }, function(){
+               console.log('something went wrong');
+
+          })
 
 
         $scope.sortType = 'date';
@@ -221,6 +238,12 @@
             TaskFactory.index({id:$scope.profile._id}, function(data){
               $scope.tasks = data;
             })
+          })
+          TaskFactory.countCompleted({id:$scope.profile._id}, function(data){
+            $scope.completedCount = data;
+          })
+          TaskFactory.countIncomplete({id:$scope.profile._id}, function(data){
+              $scope.incompleteCount = data;
           })
         }
         $scope.removeTask = function(task){
@@ -327,11 +350,22 @@
             TaskFactory.indexCompleted(userId, function(data){
               console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
               $scope.tasks = data;
+              TaskFactory.countCompleted({id:$scope.profile._id}, function(data){
+                $scope.completedCount = data;
+              })
+              TaskFactory.countIncomplete({id:$scope.profile._id}, function(data){
+                $scope.incompleteCount = data;
+              })
             });
 
-         }, function(){
-           console.log('something went wrong');
-         })
+             }, function(){
+               console.log('something went wrong');
+
+          })
+
+
+        $scope.sortType = 'date';
+        $scope.sortReverse = false;
         $scope.addTask = function(){
           console.log('clicked add task');
           $scope.new_task.completed = "Incomplete";
@@ -348,6 +382,12 @@
           TaskFactory.toggle(task, function(data){
             TaskFactory.indexCompleted({id:$scope.profile._id},function(data){
               $scope.tasks = data;
+            })
+            TaskFactory.countCompleted({id:$scope.profile._id}, function(data){
+              $scope.completedCount = data;
+            })
+            TaskFactory.countIncomplete({id:$scope.profile._id}, function(data){
+                $scope.incompleteCount = data;
             })
           })
         }
@@ -383,27 +423,39 @@
               $('#category').val("Errands");
               $scope.new_task.category = "Errands";
             })
-          })  
+        })
       });
       myApp.controller('IncompleteController', function(TaskFactory, $scope, $location, loginFactory, profileFactory){
         $scope.new_task = {};
         $scope.tasks = [];
-        profileFactory.show(function(res){
+                profileFactory.show(function(res){
           console.log("RES DATAAAAAAAAA"+res.data);
            $scope.profile = res.data;
            var currentUser = res.data;
            var userId = {id:currentUser._id};
            $scope.user = res.data;
-           console.log("USERRR IDDDDDD_!_!_!_!_!_!_" + userId.id);
+           console.log("USERRR IDDDDDD_!_!_!_!_!_!_" + userId);
 
             TaskFactory.indexIncomplete(userId, function(data){
               console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
               $scope.tasks = data;
+              TaskFactory.countCompleted({id:$scope.profile._id}, function(data){
+                $scope.completedCount = data;
+              })
+              TaskFactory.countIncomplete({id:$scope.profile._id}, function(data){
+                $scope.incompleteCount = data;
+              })
             });
 
-         }, function(){
-           console.log('something went wrong');
-         })
+             }, function(){
+               console.log('something went wrong');
+
+          })
+
+
+        $scope.sortType = 'date';
+        $scope.sortReverse = false;
+
         $scope.addTask = function(){
           console.log('clicked add task');
           $scope.new_task.completed = "Incomplete";
@@ -429,11 +481,23 @@
                 TaskFactory.indexIncomplete(userId, function(data){
                   console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
                   $scope.tasks = data;
+                  TaskFactory.countCompleted(userId, function(data){
+                    $scope.completedCount = data;
+                  })
+                  TaskFactory.countIncomplete(userId, function(data){
+                      $scope.incompleteCount = data;
+                  })
                 });
 
              }, function(){
                console.log('something went wrong');
              })
+            TaskFactory.countCompleted(userId, function(data){
+              $scope.completedCount = data;
+            })
+            TaskFactory.countIncomplete(userId, function(data){
+                $scope.incompleteCount = data;
+            })
           })
         }
         $scope.removeTask = function(task){

@@ -108,6 +108,12 @@ module.exports = function(app) {
     app.post('/incomplete', function(req, res){
     	lists.indexIncomplete(req, res);
     });
+    app.post('/countCompleted', function(req, res){
+    	lists.countCompleted(req, res);
+    });
+    app.post('/countIncomplete', function(req, res){
+    	lists.countIncomplete(req,res);
+    });
 }
 
 

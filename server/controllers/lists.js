@@ -101,6 +101,24 @@ module.exports = (function() {
                 res.json(results);
             }
         })
+    },
+    countCompleted:function(req, res){
+        List.count({_user:req.body.id, completed:"Completed"}, function(err, count){
+            if(err){
+                console.log(err);
+            }else{
+                res.json(count);
+            }
+        })
+    },
+    countIncomplete:function(req, res){
+        List.count({_user:req.body.id, completed:"Incomplete"}, function(err, count){
+            if(err){
+                console.log(err);
+            }else{
+                res.json(count);
+            }
+        })
     }
   }
 })();
