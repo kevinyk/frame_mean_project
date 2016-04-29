@@ -24,7 +24,7 @@ module.exports = function(app) {
 	app.post('/addTask', function(req, res) {
 		lists.create(req, res);
 	});
-	app.get('/tasks', function(req, res){
+	app.post('/tasks', function(req, res){
 		lists.index(req, res);
 	});
 	app.post('/deleteTask', function(req, res){
@@ -102,12 +102,12 @@ module.exports = function(app) {
     })
 
     
-    app.get('/completed', function(req, res){
+    app.post('/completed', function(req, res){
     	lists.indexCompleted(req, res);
     });
-    app.get('/incomplete', function(req, res){
+    app.post('/incomplete', function(req, res){
     	lists.indexIncomplete(req, res);
-    })
+    });
 }
 
 

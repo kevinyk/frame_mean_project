@@ -4,11 +4,13 @@
 // need to require mongoose to be able to run mongoose.model()
 var mongoose = require('mongoose');
 var List = mongoose.model('List');
+var User = mongoose.model('User');
 module.exports = (function() {
   return {
 	// notice how index in the factory(client side) is calling the index method(server side)
     index: function(req, res) {
-    	List.find({}).sort('date').exec(function(err, results){
+        console.log(req.body);
+    	List.find({_user:req.body.id}).sort('date').exec(function(err, results){
     		if(err){
     			console.log(err);
     		}else {
@@ -22,7 +24,14 @@ module.exports = (function() {
     		if(err){
     			console.log(err);
     		}else{
-    			res.json(results);
+                User.findOneAndUpdate({_id:req.body._user},{$push:{"tasks":results._id}}).exec(function(err, user){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        res.json(results);
+                    }
+                })
+    			
     		}
     	})    	
     },
@@ -76,7 +85,7 @@ module.exports = (function() {
         })
     },
     indexCompleted: function(req, res) {
-        List.find({completed:"Completed"}).sort('date').exec(function(err, results){
+        List.find({_user:req.body.id, completed:"Completed"}).sort('date').exec(function(err, results){
             if(err){
                 console.log(err);
             }else {
@@ -85,7 +94,7 @@ module.exports = (function() {
         })
     },
     indexIncomplete: function(req, res) {
-        List.find({completed:"Incomplete"}).sort('date').exec(function(err, results){
+        List.find({_user:req.body.id, completed:"Incomplete"}).sort('date').exec(function(err, results){
             if(err){
                 console.log(err);
             }else {
