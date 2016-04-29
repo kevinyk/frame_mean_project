@@ -1,0 +1,44 @@
+{
+ "name": "mean_project",
+ "version": "1.0.0",
+ "description": "mean project",
+ "main": "server.js",
+ "dependencies": {
+    "angular-materialize": "^0.1.4",
+    "angular-modal-service": "^0.6.10",
+    "angular-ui-router": "^0.2.18",
+    "bcrypt": "^0.8.6",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "latest",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
+    "express": "~4.2.0",
+    "express-session": "^1.13.0",
+    "jquery-modal": "^0.7.0",
+    "jwt-simple": "^0.5.0",
+    "method-override": "^2.3.5",
+    "mongoose": "latest",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.0",
+    "passport-google-oauth": "^1.0.0",
+    "passport-jwt": "^2.0.0",
+    "passport-local": "^1.0.0"
+ },
+ "devDependencies": {},
+ "scripts": {
+   "test": "echo \"Error: no test specified\" && exit 1",
+   "start": "node server.js"
+ },
+ "repository": {
+   "type": "git",
+   "url": "git+https://github.com/joannehkim/mean_project.git"
+ },
+ "author": "",
+ "license": "ISC",
+ "bugs": {
+   "url": "https://github.com/joannehkim/mean_project/issues"
+ },
+ "homepage": "https://github.com/joannehkim/mean_project#readme"
+ }

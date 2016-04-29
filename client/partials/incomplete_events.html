@@ -1,0 +1,115 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <title></title>
+
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<link rel='stylesheet' href='./static/style.css'>
+
+<style>
+img {
+	height: 100%;
+}
+.navbar-fixed-left {
+  width: 20%;
+/*  margin-top: -20px;*/
+  position: fixed;
+  background-color: red;
+  padding-left: 40px;
+  padding-top: 50px;
+  border-radius: 0;
+  height: 100%;
+}
+
+.navbar-fixed-left .navbar-nav > li {
+  float: none;  /* Cancel default li float: left */
+  width: 15%;
+}
+
+.navbar-fixed-left + .container {
+  padding-left: 160px;
+}
+
+/* On using dropdown menu (To right shift popuped) */
+.navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+  margin-top: -50px;
+  margin-left: 140px;
+}
+#sidebar {
+	background: #32627e;
+}
+#user {
+	color: white;
+	font-size: 2.5em;
+}
+input {
+	margin-bottom: 60px;
+}
+
+</style>
+
+
+<link rel='stylesheet' href='./static/style.css'>
+<div class="col-md-7 col-md-offset-4">
+	<table class='table table-hover' id = 'maintable'>
+		<tr>
+			<td>Task:</td>
+			<td>Description:</td>
+			<td>Category:</td>
+			<td>Date:</td>
+			<td>Status:</td>
+			<td>Actions:</td>
+		</tr>
+		<tr ng-repeat = "task in tasks">
+			<td class = '{{task.category}}table'>{{task.name}}</td>
+			<td class = '{{task.category}}table'>{{task.desc}}</td>
+			<td class = '{{task.category}}table'>{{task.category}}</td>
+			<td class = '{{task.category}}table'>{{task.date|date:medium}}</td>
+			<td class = '{{task.category}}table'>{{task.completed}}</td>
+			<td class = '{{task.category}}table'><button type="button" id="edit_button" class="btn btn-primary"><a href="#/edit_event/{{task._id}}">Edit</a></button>
+        	<button type="button" id="delete_button" class="btn btn-primary"><a href="" ng-click = 'removeTask(task)'>Delete</a></button><button type="button" id="toggle_button" class="btn btn-primary"><a href="" ng-click = 'toggleStatus(task)'>Toggle Status</a></button></td>
+		</tr>
+	</table>
+</div>
+
+<div id="sidebar" class="navbar navbar-default navbar-fixed-left navbar-fixed-top">
+  <a class="navbar-brand" href="" id="user">Hello, User :)</a>
+  <ul class="nav navbar-nav">
+    <div class="form-group">
+    <input type="text" class="form-control" placeholder="Search by Category...">
+  	</div>
+  	<a class = 'links' href='#/'>Dashboard</a> | <a class= 'links' href='#/new_event'>Add a new Event</a> <br>
+  	<a class = 'links' href='#/completed'>View your completed tasks</a> | <a class= 'links' href='#/incomplete'>View your incomplete tasks</a> | <a class= 'links' href='#/success'>View all tasks</a>
+<!--   <button type="submit" class="btn btn-default">Submit</button> -->
+   <!-- <li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+     <ul class="dropdown-menu" role="menu">
+      <li><a href="#">Sub Menu1</a></li>
+      <li><a href="#">Sub Menu2</a></li>
+      <li><a href="#">Sub Menu3</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Sub Menu4</a></li>
+      <li><a href="#">Sub Menu5</a></li>
+     </ul>
+   </li> -->
+  </ul>
+</div>
+<div class="container">
+ <div class="row">
+   <h2>Left side Navigation bar (Fixed)</h2>
+   
+   <p>Left side Navigation</p>
+ </div>
+</div>
+
+
+
+
+
+<script>console.log(tasks)</script>

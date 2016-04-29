@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+
+<head>
+  <title>MEAN PROJECT</title>
+  <script type="text/javascript" script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script type="text/javascript" script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+  <link rel='stylesheet' href='./static/style.css'>
+
+<script>
+    var myApp = angular.module('myApp', ['ngRoute'])
+      .config(function($routeProvider){
+        $routeProvider
+          .when('/', {
+            templateUrl: "/partials/index.html",
+            controller: "profilesController"
+          })
+          .when('/login', {
+            templateUrl: "/partials/login.html",
+            controller: "loginsController"
+          })
+          .when('/register', {
+            templateUrl: "/partials/register.html",
+            controller: "loginsController"
+          })
+          .when('/success', {
+            templateUrl: "/partials/main.html",
+            controller: "MainController"
+          })
+          .when('/new_event', {
+            templateUrl: "/partials/new_event.html",
+            controller:"MainController"
+          })
+          .when('/event_details', {
+            templateUrl: "/partials/event_details.html"
+          })
+          .when('/edit_event/:id',{
+            templateUrl: "/partials/edit_event.html",
+            controller:"EditController"
+          })
+          .when('/completed', {
+            templateUrl: "/partials/completed_events.html",
+            controller:"CompletedController"
+          })
+          .when('/incomplete', {
+            templateUrl: "/partials/incomplete_events.html",
+            controller:"IncompleteController"
+          })    
+      })
+      // .controller('loginController', loginController)
+      // .controller('MainController', MainController)
+      // .factory('loginFactory', loginFactory)
+      // .factory('topicFactory', topicFactory)
+      myApp.factory('TaskFactory', function($http, $location){
+        var factory = {};
+        var tasks = [];
+        var currentTask = {};
+        factory.index = function(callback){
+          $http.get('/tasks').success(function(output){
+            tasks = output;
+            callback(tasks);
+          })
+        }
+        factory.indexCompleted = function(callback){
+          $http.get('/completed').success(function(output){
+            tasks = output;
+            callback(tasks);
+          })
+        }
+        factory.indexIncomplete = function(callback){
+          $http.get('/incomplete').success(function(output){
+            tasks = output;
+            callback(tasks);
+          })
+        }
+        factory.create = function(info, callback){
+          $http.post('/addTask', info).success(function(output){
+            tasks.push({name:info.name, desc: info.desc, date: info.date, category: info.category, completed: 0});
+            callback();
+
+          })
+        }
+        factory.delete = function(info, callback){
+          $http.post('/deleteTask', info).success(function(output){
+            tasks.splice(tasks.indexOf(info), 1);
+          })
+        }
+        factory.toggle = function(info, callback){
+          $http.post('/toggleTask', info).success(function(output){
+            callback();
+          })
+        }
+        factory.findOne = function(info, callback){
+          $http.post('/findTask', info).success(function(output){
+            currentTask= output;
+            callback(currentTask);
+          })
+        }
+        factory.update = function(info, callback){
+          $http.post('/editTask', info).success(function(output){
+            callback();
+          })
+        }
+        return factory;
+      });
+
+      //REGISTRATION FACTORY
+      myApp.factory('RegisterFactory', function($http) {
+
+         var factory = {};
+
+         factory.create = function(newUser, callback){
+           $http.post('/register', newUser).success(function(getUsers) {
+             callback(users);
+           })
+         }
+
+         return factory;
+
+       });
+
+
+      //LOGIN FACTORY
+      //LOGIN FACTORY
+      myApp.factory('loginFactory', function($http, $location){
+         var factory = {};
+         var currentUser = null;
+
+
+         factory.getCurrent = function(callback){
+           if(currentUser) callback(currentUser);
+           else{
+             $location.path('/');
+           }
+         }
+
+         factory.login = function(data, successHandler, failHandler){
+           $http.post('/login', data).then(function(res){
+             currentUser = res.data;
+             console.log(currentUser, "got a current user");
+             successHandler(res);
+           }, failHandler);
+         }
+
+
+         factory.register = function(data, successHandler, failHandler){
+          console.log(data);
+           $http.post('/register', data).then(successHandler, failHandler);
+         }
+
+         factory.logout = function(){
+           $http.get('/logout').then(function(){
+             $location.path('/');
+           });
+         }
+
+         return factory;
+     });
+
+    //PROFILE FACTORY
+     myApp.factory('profileFactory', function($http, loginFactory){
+       var factory = {};
+       factory.show = function(success, fail){
+         $http.get('/profile').then(success, fail)
+       }
+       return factory;
+     })
+      myApp.controller('MainController', function(TaskFactory, $scope, $location, loginFactory, profileFactory){
+        $scope.new_task = {};
+        $scope.tasks = [];
+        // LoginFactory.getUser(function(user){
+        //   $scope.currentUser = user;
+        // })
+
+
+
+
+        profileFactory.show(function(res){
+          console.log(res.data);
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+        console.log($scope.profile);
+
+
+
+        $scope.sortType = 'date';
+        $scope.sortReverse = false;
+        TaskFactory.index(function(data){
+          $scope.tasks = data;
+        });
+        $scope.addTask = function(){
+          console.log('clicked add task');
+          $scope.new_task.completed = "Incomplete";
+          console.log($scope.new_task);
+          TaskFactory.create($scope.new_task, function(data){
+            $scope.new_task = {};
+            console.log("HERE");
+            $location.path('/success');
+          })
+        }
+        $scope.toggleStatus = function(task){
+          console.log('clicked on change status');
+          TaskFactory.toggle(task, function(data){
+            TaskFactory.index(function(data){
+              $scope.tasks = data;
+            })
+          })
+        }
+        $scope.removeTask = function(task){
+          console.log('clicked on delete task');
+          TaskFactory.delete(task, function(data){
+            console.log('successfully deleted task');
+          })
+        }
+
+          $(document).ready(function() {
+            $(document).on("click", "#special", function() {
+              $('#category').val("Special");
+              $scope.new_task.category = "Special";
+            })
+            $(document).on("click", "#shopping", function() {
+              $('#category').val("Shopping");
+              $scope.new_task.category = "Shopping";
+            })
+            $(document).on("click", "#work", function() {
+              $('#category').val("Work");
+              $scope.new_task.category = "Work";
+            })
+            $(document).on("click", "#travel", function() {
+              $('#category').val("Travel");
+              $scope.new_task.category = "Travel";
+            })
+            $(document).on("click", "#study", function() {
+              $('#category').val("Study");
+              $scope.new_task.category = "Study";
+            })
+            $(document).on("click", "#errands", function() {
+              $('#category').val("Errands");
+              $scope.new_task.category = "Errands";
+            })
+          })  
+      });
+      myApp.controller('EditController', function(TaskFactory, $scope, $location, $routeParams, loginFactory, profileFactory){
+        $scope.task = {};
+        $scope.currentTask = {};
+        // LoginFactory.getUser(function(user){
+        //   $scope.currentUser = user;
+        // })
+        profileFactory.show(function(res){
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+        TaskFactory.findOne({id:$routeParams.id}, function(data){
+          $scope.currentTask = data;
+          console.log($scope.currentTask);
+          $scope.task = $scope.currentTask;
+        });
+        
+        $scope.editTask = function(task){
+          console.log('clicked on edit task');
+          TaskFactory.update(task, function(data){
+            console.log('successfully edited task');
+            $scope.currentTask= data;
+            $location.path('/success');
+          })
+        }
+
+          $(document).ready(function() {
+            $(document).on("click", "#special", function() {
+              $('#category').val("Special");
+              $scope.task.category = "Special";
+            })
+            $(document).on("click", "#shopping", function() {
+              $('#category').val("Shopping");
+              $scope.task.category = "Shopping";
+            })
+            $(document).on("click", "#work", function() {
+              $('#category').val("Work");
+              $scope.task.category = "Work";
+            })
+            $(document).on("click", "#travel", function() {
+              $('#category').val("Travel");
+              $scope.task.category = "Travel";
+            })
+            $(document).on("click", "#study", function() {
+              $('#category').val("Study");
+              $scope.task.category = "Study";
+            })
+            $(document).on("click", "#errands", function() {
+              $('#category').val("Errands");
+              $scope.task.category = "Errands";
+            })
+          })  
+      });
+      myApp.controller('CompletedController', function(TaskFactory, $scope, $location, loginFactory, profileFactory){
+        $scope.new_task = {};
+        $scope.tasks = [];
+        // LoginFactory.getUser(function(user){
+        //   $scope.currentUser = user;
+        // })
+        profileFactory.show(function(res){
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+        console.log($scope.profile);
+        TaskFactory.indexCompleted(function(data){
+          $scope.tasks = data;
+        });
+        $scope.addTask = function(){
+          console.log('clicked add task');
+          $scope.new_task.completed = "Incomplete";
+          console.log($scope.new_task);
+          TaskFactory.create($scope.new_task, function(data){
+            $scope.new_task = {};
+            console.log("HERE");
+            $location.path('/success');
+          })
+        }
+        $scope.toggleStatus = function(task){
+          console.log('clicked on change status');
+          TaskFactory.toggle(task, function(data){
+            TaskFactory.indexCompleted(function(data){
+              $scope.tasks = data;
+            })
+          })
+        }
+        $scope.removeTask = function(task){
+          console.log('clicked on delete task');
+          TaskFactory.delete(task, function(data){
+            console.log('successfully deleted task');
+          })
+        }
+
+          $(document).ready(function() {
+            $(document).on("click", "#special", function() {
+              $('#category').val("Special");
+              $scope.new_task.category = "Special";
+            })
+            $(document).on("click", "#shopping", function() {
+              $('#category').val("Shopping");
+              $scope.new_task.category = "Shopping";
+            })
+            $(document).on("click", "#work", function() {
+              $('#category').val("Work");
+              $scope.new_task.category = "Work";
+            })
+            $(document).on("click", "#travel", function() {
+              $('#category').val("Travel");
+              $scope.new_task.category = "Travel";
+            })
+            $(document).on("click", "#study", function() {
+              $('#category').val("Study");
+              $scope.new_task.category = "Study";
+            })
+            $(document).on("click", "#errands", function() {
+              $('#category').val("Errands");
+              $scope.new_task.category = "Errands";
+            })
+          })  
+      });
+      myApp.controller('IncompleteController', function(TaskFactory, $scope, $location, loginFactory, profileFactory){
+        $scope.new_task = {};
+        $scope.tasks = [];
+        profileFactory.show(function(res){
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+        console.log($scope.profile);
+        // LoginFactory.getUser(function(user){
+        //   $scope.currentUser = user;
+        // })
+        TaskFactory.indexIncomplete(function(data){
+          $scope.tasks = data;
+        });
+        $scope.addTask = function(){
+          console.log('clicked add task');
+          $scope.new_task.completed = "Incomplete";
+          console.log($scope.new_task);
+          TaskFactory.create($scope.new_task, function(data){
+            $scope.new_task = {};
+            console.log("HERE");
+            $location.path('/success');
+          })
+        }
+        $scope.toggleStatus = function(task){
+          console.log('clicked on change status');
+          TaskFactory.toggle(task, function(data){
+            TaskFactory.indexIncomplete(function(data){
+              $scope.tasks = data;
+            })
+          })
+        }
+        $scope.removeTask = function(task){
+          console.log('clicked on delete task');
+          TaskFactory.delete(task, function(data){
+            console.log('successfully deleted task');
+          })
+        }
+
+          $(document).ready(function() {
+            $(document).on("click", "#special", function() {
+              $('#category').val("Special");
+              $scope.new_task.category = "Special";
+            })
+            $(document).on("click", "#shopping", function() {
+              $('#category').val("Shopping");
+              $scope.new_task.category = "Shopping";
+            })
+            $(document).on("click", "#work", function() {
+              $('#category').val("Work");
+              $scope.new_task.category = "Work";
+            })
+            $(document).on("click", "#travel", function() {
+              $('#category').val("Travel");
+              $scope.new_task.category = "Travel";
+            })
+            $(document).on("click", "#study", function() {
+              $('#category').val("Study");
+              $scope.new_task.category = "Study";
+            })
+            $(document).on("click", "#errands", function() {
+              $('#category').val("Errands");
+              $scope.new_task.category = "Errands";
+            })
+          })  
+      });
+      //LOGIN CONTROLLER
+      myApp.controller('loginsController', function($scope, loginFactory, $location, profileFactory){
+          console.log("in loginsController")
+        profileFactory.show(function(res){
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+        console.log($scope.profile);
+          $scope.login = function(data){
+            console.log(data);
+            $scope.flash = {};
+            loginFactory.login(data, function(res){
+              $location.path('/success')
+            }, function(res){
+              $scope.flash.message = res.data.message;
+              $scope.loginUser = {}
+            })
+          }
+          $scope.register = function(data){
+            $scope.flash = {};
+            loginFactory.register(data, function(res){
+              $scope.flash.message = res.data.message;
+              $scope.newUser = {}
+            })
+          }
+          $scope.logout = loginFactory.logout;
+        })
+      //PROFILE CONTROLLER
+       myApp.controller('profilesController', function($scope, loginFactory, profileFactory, $location){
+         loginFactory.getCurrent(function(data){
+           $scope.currentUser = data;
+           console.log($scope.currentUser)
+         })
+         $scope.logout = loginFactory.logout;
+
+         profileFactory.show(function(res){
+           $scope.profile = res.data;
+         }, function(){
+           console.log('something went wrong');
+         })
+         console.log($scope.profile);
+       })
+</script>
+
+</head>
+
+<body ng-app='myApp'>
+
+  <a class = 'links' href='#/'>Dashboard</a> | <a class= 'links' href='#/new_event'>Add a new Event</a> 
+  <div id="banner">
+    <img src="/static/frame_banner.png">
+      <div id = 'partial' ng-view="">
+      </div>
+  </div>
+</body>
+</html>
+
