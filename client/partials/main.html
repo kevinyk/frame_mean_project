@@ -1,20 +1,19 @@
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script type="text/javascript" script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script type="text/javascript" script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <title></title>
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
-
-<link rel='stylesheet' href='./static/style.css'>
+  <link rel='stylesheet' href='./static/style.css'>
 
 
 <style>
@@ -47,7 +46,8 @@ img {
   margin-left: 140px;
 }
 #sidebar {
-  background: #404d5c;
+  background: #2a3251;
+  background: rgba(42, 50, 81, 0.73);
 }
 #user {
   color: white;
@@ -63,7 +63,12 @@ input {
 #links {
   color: white;
 }
-
+#category_search {
+  margin-left: 20px;
+}
+#register_button {
+  margin-bottom: 160px;
+}
 </style>
 
 
@@ -78,7 +83,7 @@ input {
 			<td>Status:</td>
 			<td>Actions:</td>
 		</tr>
-		<tr ng-repeat = "task in tasks">
+		<tr ng-repeat = "task in tasks | filter: filter_name | orderBy:sortType:sortReverse">
 			<td class = '{{task.category}}table'>{{task.name}}</td>
 			<td class = '{{task.category}}table'>{{task.desc}}</td>
 			<td class = '{{task.category}}table'>{{task.category}}</td>
@@ -88,16 +93,25 @@ input {
         	<button type="button" id="delete_button" class="btn btn-primary"><a href="" ng-click = 'removeTask(task)'>Delete</a></button><button type="button" id="toggle_button" class="btn btn-primary"><a href="" ng-click = 'toggleStatus(task)'>Toggle Status</a></button></td>
 		</tr>
 	</table>
+
 <div id="sidebar" class="navbar navbar-default navbar-fixed-left navbar-fixed-top">
-<a href='#/' id='links'>Dashboard</a> | <a href='#/new_event' id='links'>Add a new Event</a><br><br><br>
+
+
   <a class="navbar-brand" href="" id="user">Hello, {{user.name}} :)</a>
   <ul class="nav navbar-nav">
     <div class="form-group">
-    <input type="text" class="form-control" placeholder="Search by Category...">
+
+    <input type="text" class="form-control" id=
+    "search" ng-model="filter_name" placeholder="Search by Category...">
+
+<!--     <input type="text" class="form-control" id="search" placeholder="Search by Category..."> -->
   	</div>
-  	<a class = 'links' href='#/'>Dashboard</a> | <a class= 'links' href='#/new_event'>Add a new Event</a> <br>
+<!--   	<a class = 'links' href='#/'>Dashboard</a> | <a class= 'links' href='#/new_event'>Add a new Event</a> <br> -->
   	<a class = 'links' href='#/completed'>View your completed tasks</a> | <a class= 'links' href='#/incomplete'>View your incomplete tasks</a> | <a class= 'links' href='#/success'>View all tasks</a> 
 
+<button type="button" id="register_button" class="btn btn-primary"><a href="/#/new_event">Add a New Event</a></button>
+
+<button type="button" id="register_button" class="btn btn-primary"><a href="/stats.html">Stats</a></button>
 
     </div>
 
