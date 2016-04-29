@@ -48,6 +48,7 @@ h3 {
 }
 #search {
     width: 300px;
+    margin-bottom: 40px;
 }
 #email {
     background: transparent;
@@ -157,6 +158,26 @@ option:checked{
 /***********************
   CUSTON BTN VALUES
 ************************/
+#sidebar_button {
+    margin: /*40px 20px 20px 10px*/;
+    border-radius: 40px;
+    margin-right: 10px;
+    background: transparent;
+    font-size: 0.7em;
+    border: 1px solid white;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/*    height:2em;
+    padding:4px;
+    font-size: 0.9em;
+    border-radius: 40px;
+    background: transparent;
+    border: 1px solid white;
+    margin-right: 5px;
+    margin-bottom: 5px;
+*/
 
 #login_button {
     margin: 40px 20px 20px 10px;
@@ -168,12 +189,13 @@ option:checked{
 }
 
 #register_button {
-    margin: 40px 90px 20px 10px;
+    margin: 40px 80px 20px 10px;
     border-radius: 40px;
     background: transparent;
     border: 1px solid white;
     box-shadow: none;
     text-shadow: none;
+
 }
 #task_button {
     border-radius: 40px;
