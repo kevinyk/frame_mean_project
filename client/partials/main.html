@@ -62,8 +62,14 @@ input {
 }
 #links {
   color: white;
+  font-size:1em;
 }
-
+.sidebarlink{
+	color:white;
+}
+ul{
+	list-style: none;
+}
 </style>
 
 
@@ -95,8 +101,13 @@ input {
     <div class="form-group">
     <input type="text" class="form-control" placeholder="Search by Category...">
   	</div>
-  	<a class = 'links' href='#/'>Dashboard</a> | <a class= 'links' href='#/new_event'>Add a new Event</a> <br>
-  	<a class = 'links' href='#/completed'>View your completed tasks</a> | <a class= 'links' href='#/incomplete'>View your incomplete tasks</a> | <a class= 'links' href='#/success'>View all tasks</a> 
+  	<ul>
+  		<li><a class = 'sidebarlink' href='#/'>Dashboard</a></li>
+  		<li><a class= 'sidebarlink' href='#/new_event'>Add a new Event</a></li>
+  		<li><a class = 'sidebarlink' href='#/completed'>View your completed tasks</a></li>
+  		<li><a class= 'sidebarlink' href='#/incomplete'>View your incomplete tasks</a></li>
+  		<li><a class= 'sidebarlink' href='#/success'>View all tasks</a></li>
+  	</ul>
 
 
     </div>

@@ -317,14 +317,21 @@
         //   $scope.currentUser = user;
         // })
         profileFactory.show(function(res){
+          console.log("RES DATAAAAAAAAA"+res.data);
            $scope.profile = res.data;
+           var currentUser = res.data;
+           var userId = {id:currentUser._id};
+           $scope.user = res.data;
+           console.log("USERRR IDDDDDD_!_!_!_!_!_!_" + userId);
+
+            TaskFactory.indexCompleted(userId, function(data){
+              console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
+              $scope.tasks = data;
+            });
+
          }, function(){
            console.log('something went wrong');
          })
-        console.log($scope.profile);
-        TaskFactory.indexCompleted({id:$scope.profile._id},function(data){
-          $scope.tasks = data;
-        });
         $scope.addTask = function(){
           console.log('clicked add task');
           $scope.new_task.completed = "Incomplete";
@@ -382,17 +389,21 @@
         $scope.new_task = {};
         $scope.tasks = [];
         profileFactory.show(function(res){
+          console.log("RES DATAAAAAAAAA"+res.data);
            $scope.profile = res.data;
+           var currentUser = res.data;
+           var userId = {id:currentUser._id};
+           $scope.user = res.data;
+           console.log("USERRR IDDDDDD_!_!_!_!_!_!_" + userId.id);
+
+            TaskFactory.indexIncomplete(userId, function(data){
+              console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
+              $scope.tasks = data;
+            });
+
          }, function(){
            console.log('something went wrong');
          })
-        console.log($scope.profile);
-        // LoginFactory.getUser(function(user){
-        //   $scope.currentUser = user;
-        // })
-        TaskFactory.indexIncomplete({id:$scope.profile._id},function(data){
-          $scope.tasks = data;
-        });
         $scope.addTask = function(){
           console.log('clicked add task');
           $scope.new_task.completed = "Incomplete";
@@ -407,9 +418,22 @@
         $scope.toggleStatus = function(task){
           console.log('clicked on change status');
           TaskFactory.toggle(task, function(data){
-            TaskFactory.indexIncomplete({id:$scope.profile._id},function(data){
-              $scope.tasks = data;
-            })
+            profileFactory.show(function(res){
+              console.log("RES DATAAAAAAAAA"+res.data);
+               $scope.profile = res.data;
+               var currentUser = res.data;
+               var userId = {id:currentUser._id};
+               $scope.user = res.data;
+               console.log("USERRR IDDDDDD_!_!_!_!_!_!_" + userId.id);
+
+                TaskFactory.indexIncomplete(userId, function(data){
+                  console.log('LOADED SUCCESSSSS-----!_!_!_!_'+ data);
+                  $scope.tasks = data;
+                });
+
+             }, function(){
+               console.log('something went wrong');
+             })
           })
         }
         $scope.removeTask = function(task){
